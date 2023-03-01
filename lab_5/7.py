@@ -1,4 +1,4 @@
 import re
 txt = input() 
-x = txt.title().replace("_", "") 
+x = txt.replace("_", "") 
 print(x)
