@@ -6,7 +6,7 @@ pygame.init()
 window = pygame.display.set_mode((500, 500)) 
 pygame.display.set_caption("Music Player")
 
-musicfolder = r'C:\merey\pp2\lab_7\music'
+music = r'C:\merey\pp2\lab_7\music'
 musicfiles = [os.path.join(music, f) for f in os.listdir(music) if f.endswith('.mp3')]
 
 i = 0
