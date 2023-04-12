@@ -34,7 +34,8 @@ background = pygame.image.load("AnimatedStreet.png")
 DISPLAYSURF = pygame.display.set_mode((400,600))
 DISPLAYSURF.fill(WHITE)
 pygame.display.set_caption("Game")
- 
+coin_image=pygame.image.load('Coin.png')
+
 class Enemy(pygame.sprite.Sprite):
       def __init__(self):
         super().__init__() 
@@ -46,23 +47,22 @@ class Enemy(pygame.sprite.Sprite):
         # global SCORE
         self.rect.move_ip(0,SPEED)
         if (self.rect.top > 600):
-           # SCORE += 1
             self.rect.top = 0
             self.rect.center = (random.randint(40, SCREEN_WIDTH - 40), 0)
  
-class coin(pygame.sprite.Sprite):
+class Coin(pygame.sprite.Sprite):
     def __init__(self):
         super().__init__()
-        random_coin=random.randint(1,5)
-        self.image = pygame.image.load("Coin.png")
+        random_coin=random.randint(1,3)
+        image = pygame.transform.scale(pygame.image.load('Coin.png'), (40,40))
+        self.image=pygame.transfrorm.scale(pygame.image.load('Coin.png'), (40,40))
         self.rect = self.image.get_rect()
         self.rect.center = (random.randint(40, SCREEN_WIDTH-40), 0)
+        self.random_coin=random_coin
 
-        def move(self):
-            # global SCORE
+        def move(self):   
             self.rect.move_ip(0,SPEED)
             if (self.rect.top > 600):
-                # SCORE +=1
                 self.rect.top=0
                 self.rect.center=(random.randint(40, SCREEN_WIDTH-40), 0)
         
@@ -85,26 +85,22 @@ class Player(pygame.sprite.Sprite):
         
     def move(self):
         pressed_keys = pygame.key.get_pressed()
-       #if pressed_keys[K_UP]:
-            #self.rect.move_ip(0, -5)
-       #if pressed_keys[K_DOWN]:
-            #self.rect.move_ip(0,5)
-         
+      
         if self.rect.left > 0:
-              if pressed_keys[K_LEFT]:
-                  self.rect.move_ip(-5, 0)
+            if pressed_keys[K_LEFT]:
+                self.rect.move_ip(-5, 0)
         if self.rect.right < SCREEN_WIDTH:        
-              if pressed_keys[K_RIGHT]:
-                  self.rect.move_ip(5, 0)
+            if pressed_keys[K_RIGHT]:
+                self.rect.move_ip(5, 0)
                    
 #Setting up Sprites        
 P1 = Player()
 E1 = Enemy()
-C1 = coin() 
+C1 = Coin() 
 #Creating Sprites Groups
 enemies = pygame.sprite.Group()
 enemies.add(E1)
-coins= pygame.sprite.Group()
+coins=pygame.sprite.Group()
 coins.add(C1)
 all_sprites = pygame.sprite.Group()
 all_sprites.add(P1)
@@ -119,7 +115,7 @@ while True:
     #Cycles through all events occurring  
     for event in pygame.event.get():
         if event.type == INC_SPEED and SCORE%10==0 and SCORE!=0:
-              SPEED += 0.5     
+            SPEED += 0.5     
         if event.type == QUIT:
             pygame.quit()
             sys.exit()  
@@ -135,18 +131,20 @@ while True:
  
     #To be run if collision occurs between Player and Enemy
     if pygame.sprite.spritecollideany(P1, enemies):
-          pygame.mixer.Sound('crash.wav').play()
-          time.sleep(0.5)
+        pygame.mixer.music.stop()
+        pygame.mixer.Sound('crash.wav').play()
+        time.sleep(0.5)
                     
-          DISPLAYSURF.fill(RED)
-          DISPLAYSURF.blit(game_over, (30,250))
+        DISPLAYSURF.fill(RED)
+        DISPLAYSURF.blit(game_over, (30,250))
            
-          pygame.display.update()
-          for entity in all_sprites:
-                entity.kill() 
-          time.sleep(2)
-          pygame.quit()
-          sys.exit()        
+        pygame.display.update()
+        for entity in all_sprites:
+            entity.kill() 
+        time.sleep(2)
+        pygame.quit()
+        sys.exit()   
+        #increase the score if collision occurs      
     elif pygame.sprite.spritecollideany(P1, coins):
         pygame.mixer.music.play()
         SCORE+=C1.random_coin
